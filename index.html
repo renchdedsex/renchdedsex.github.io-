@@ -1,215 +1,123 @@
 <!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
-<title>RENCHDEDSEX'S ZCITY SERVER</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<style>
-:root{
-    --red:#b00000;
-    --red-bright:#ff2a2a;
-    --bg:#000;
-    --panel:#050505;
-    --text:#e6e6e6;
-    --muted:#9a9a9a;
-}
-
-*{box-sizing:border-box;margin:0;padding:0}
-
-html,body{
-    width:100%;
-    height:100%;
-    background:var(--bg);
-    color:var(--text);
-    font-family:Consolas,"Lucida Console",monospace;
-    overflow:hidden;
-}
-
-/* background */
-
-/* main frame */
-.frame{
-    position:fixed;
-    inset:40px;
-    border:2px solid var(--red);
-    background:rgba(0,0,0,.55);
-    display:flex;
-    flex-direction:column;
-}
-
-/* header */
-.header{
-    padding:10px 14px;
-    border-bottom:2px solid var(--red);
-    text-transform:uppercase;
-    letter-spacing:1px;
-    font-size:18px;
-}
-
-/* body */
-.body{
-    flex:1;
-    display:grid;
-    grid-template-columns:420px 1fr;
-}
-
-/* left panel */
-.left{
-    border-right:2px solid var(--red);
-    padding:10px;
-}
-
-.section-title{
-    color:var(--muted);
-    font-size:13px;
-    margin-bottom:8px;
-}
-
-/* player list */
-.player{
-    padding:6px 8px;
-    margin-bottom:4px;
-    background:linear-gradient(90deg, rgba(176,0,0,.75), rgba(176,0,0,.35));
-    border:1px solid var(--red);
-    display:flex;
-    justify-content:space-between;
-    font-size:14px;
-}
-
-/* right panel */
-.right{
-    padding:12px;
-    font-size:14px;
-    color:var(--muted);
-}
-
-/* footer */
-.footer{
-    border-top:2px solid var(--red);
-    padding:8px 14px;
-    display:flex;
-    justify-content:space-between;
-    font-size:13px;
-    text-transform:uppercase;
-}
-.time{
-    color:var(--red-bright);
-}
-
-/* blink effect */
-.blink{
-    animation:blink 1s steps(1) infinite;
-}
-@keyframes blink{
-    50%{opacity:0}
-}
-</style>
+<!-- saved from url=(0036)https://zcity-help.ru/loadingscreen/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="./zcity-help.ru_files/style.css" rel="stylesheet">
 </head>
-
 <body>
-<div class="bg"></div>
-
-<div class="frame">
-    <div class="header">
-         RENCHDEDSEX'S ZCITY SERVER
-    </div>
-
-    <div class="body">
-        <div class="left">
-            <div class="section-title">PLAYERS:</div>
-
-            <div class="player"><span>renchdedsex</span><span>owner/developer</span></div>
-            <div class="player"><span>Just A Bogler</span><span>owner/developer</span></div>
-            <div class="player"><span>Mirotvores</span><span>st. admin</span></div>
-            <div class="player"><span>DisTac</span><span>admin</span></div>
-            <div class="player"><span>Griggs</span><span>admin</span></div>
-            <div class="player"><span>Narik</span><span>admin</span></div>
-            <div class="player"><span>an/prc-152 harris corporation®</span><span>admin</span></div>
-
+	<canvas id="grid" width="2246" height="1216"></canvas>
+    <div class="gradient"></div>
+	<div class="centertext">
+		<span class="text_1">Z</span>
+		<span class="text_1" style="color:white;">City</span>
+        <div style="margin-top: -2vh;">
+            <span class="info" id="info" style="font-weight: 500;">There is nothing for you... sorry :3</span>
+            <br>
+            <span class="info" id="map"></span>
+            <br>
+            <span id="text_tips" tip="" style="opacity: 1;">Если человек ведет себя подозрительно, это не совсем причина для убийства</span>
         </div>
+	</div>
+    <span class="info-down">zcity-help.ru</span>
 
-        <div class="right">
-            > connect 5.42.211.141:7777<br>
-            > zcity ttt_loadingscreen max_players: 20<br>
-            > Welcome to RENCHDEDSEX'S ZCITY SERVER<br>
-            > This server is running Modified Z-CITY build<br>
-            > Our discord server: https://discord.gg/acJRc8JgVQ<br>
-            > Loading tips: <span class="blink">_ERROR_</span><br>
-            > Wait, this screen is under construction?<br>
-        </div>
-    </div>
+    <script>
+        const canvas = document.getElementById('grid');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth+25;
+        canvas.height = window.innerHeight+25;
+        canvas.position = "absolute"
+        
+        const gridSize = 60;
+        let offsetX = window.innerWidth;
+        let offsetY = -window.innerHeight;
+        const gridColor = 'rgba(99, 88, 104, 0.05)';
+        
+        function drawGrid() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    <div class="footer">
-        <div>Modified Z-CITY build</div>
-        <div class="time" id="time">00:00:00</div>
-    </div>
-</div>
+            for (let x = offsetX % gridSize; x < canvas.width + gridSize; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.strokeStyle = gridColor;
+                ctx.lineWidth = 2.5;
+                ctx.stroke();
+            }
 
-<script>
-    const CONFIG = {
-            windowTitle: 'Garry\'s Mod',
-            title: 'ПОДКЛЮЧЕНИЕ',
-            subtitle: 'Добро пожаловать!',
-            backgrounds: [
-                'img/background1.png',
-                'img/background2.png',
-                'img/background3.png',
-                'img/background4.png',
-                'img/background5.png'
-            ],
-            musicFiles: [
-                'sound/loading_music1.mp3',
-                'sound/loading_music2.mp3',
-                'sound/loading_music3.mp3',
-                'sound/loading_music4.mp3'
-            ],
-            musicVolume: 0.5,
-            tips: [
-                'ПРИКИНЬ, ЭТО ЗАГРУЗОЧНЫЙ ЭКРАН',
-                'Рубби походу женщина, которая сидит в темной комнате и запускает серверы для тебя',
-                'Если твой нищий пк не тянет то тебе лучше не играть',
-                'Я не знаю что еще написать :/',
-                'Если ты женского пола то у тебя есть 5 минут чтобы скинуть фотку ножек в наш тг чат ❤',
-                'Введи себе ▮▮▮▮▮▮ в вены и наслаждайся',
-                'Я ПОМЫЛСЯ ХАХАХАХА',
-                'Не будь админом, оно тебе не надо',
-                'официальная дата рождение рубича это 1 августа ^^',
-                'Rubby4ch - это не человек, а искусственный интеллект, который был создан в 2010 году для управления серверами Garry\'s Mod',
-                'Парни выше нос:)',
-                'Всегда хвали себя даже если это маленькие вещи',
-                'Вы важны также сильно как и смолтаун среди игроков з-сити',
-                'Будьте хороши также как система повреждений из з-сити',
-                '#позитивчик:))))',
-                'блять, ксс забыл скачать :(',
-                'мннмн',
-                'Brisorm делает хуйню, не обращайте внимания',
-                'эээ ну типо сникпик тута',
-                'брисько 🤤 (вы не шарите)',
-                'давай мытся в мытищенске',
-                'Если вы будете красть вещи как шарик у зсити то вас убьют!',
-                'бэм бэм бэм изи бриджи бибэ',
-                'Привет Артур'
-            ]
-        };
+            for (let y = offsetY % gridSize; y < canvas.height + gridSize; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.strokeStyle = gridColor;
+                ctx.lineWidth = 2.5;
+                ctx.stroke();
+            }
 
-        function cycleTips() {
-            const fade = tipDisplay.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 800, fill: 'forwards' });
-            fade.onfinish = () => {
-                tipIndex = (tipIndex + 1) % shuffledTips.length;
-                if (tipIndex === 0) shuffledTips = shuffle(CONFIG.tips);
-                tipDisplay.textContent = shuffledTips[tipIndex];
-                tipDisplay.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 800, fill: 'forwards' });
-            };
+            offsetX -= Math.min(Math.max(Math.sin(Date.now() / 10000), -0.2), 0.2);
+            offsetY += 0.2;
+
+            requestAnimationFrame(drawGrid);
         }
-        setInterval(cycleTips, 10000);
-function updateTime(){
-    const d = new Date();
-    const t = d.toLocaleTimeString('ru-RU', {hour12:false});
-    document.getElementById('time').textContent = t;
-}
-setInterval(updateTime,1000);
-updateTime();
-</script>
-</body>
-</html>
+
+        drawGrid();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+
+    <script>
+        var currentLang = navigator.language;
+        function SelectTip() {
+            const newLang = (currentLang === 'ru-RU' || currentLang === 'ru') ? 'ru' : 'en';
+
+            fetch(`tips/${newLang}.json`)
+                .then(response => response.json())
+                .then(translationData => {
+                    document.querySelectorAll('[tip]').forEach(element => {
+                        var keys = Object.keys(translationData)
+                        const key = keys[Math.floor(Math.random() * keys.length)]
+                        //console.log(key)
+                        if (translationData[key]) {
+                            element.textContent = translationData[key];
+                        }
+                    });   
+                })
+                .catch(error => console.error('Error loading language file:', error)); 
+        }
+        const changingText = document.getElementById('text_tips');
+        function changeText(){
+            changingText.style.opacity = 0;
+            changingText.addEventListener('transitionend', handleTransitionEnd, { once: true });
+            function handleTransitionEnd(){
+                changingText.style.opacity = 1;
+                SelectTip()
+                startThink()
+                //changingText.classList.remove('fade-out');
+                //SelectTip()
+            }
+            
+        }
+
+        function startThink(){
+            setTimeout(() => {
+                changeText()
+                //startThink()
+            },12000)
+        }
+        setTimeout(() => {changeText()},500)
+
+
+        const infoText = document.getElementById('info');
+        const mapText = document.getElementById('map');
+        function GameDetails( servername, serverurl, mapname, maxplayers, steamid, gamemode, volume, language ) {
+            infoText.textContent = servername.split("|")[2].trim()
+            mapText.textContent = "On map: " + mapname
+            currentLang = language
+        }
+    </script>
+
+</body></html>
