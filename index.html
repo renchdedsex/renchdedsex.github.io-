@@ -3,23 +3,104 @@
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link href="./zcity-help.ru_files/style.css" rel="stylesheet">
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap');
+
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			width: 100%;
+			height: 100vh;
+			overflow: hidden;
+			background-color: #0a0a0a;
+			font-family: 'Disket Mono', 'JetBrains Mono', monospace;
+			color: #fff;
+		}
+
+		canvas#grid {
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+
+		.gradient {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: radial-gradient(ellipse at center, rgba(230, 0, 0, 0) 0%, rgba(61, 61, 61, 0.5) 100%);
+			pointer-events: none;
+		}
+
+		.centertext {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			text-align: center;
+			z-index: 10;
+		}
+
+		.text_1 {
+			font-size: 8rem;
+			font-weight: bold;
+			letter-spacing: 2px;
+			display: inline-block;
+			font-family: 'Disket Mono', 'JetBrains Mono', monospace;
+		}
+
+		.info {
+			font-size: 1rem;
+			letter-spacing: 1px;
+			opacity: 0.8;
+			font-family: 'Disket Mono', 'JetBrains Mono', monospace;
+		}
+
+		#text_tips {
+			transition: opacity 0.5s ease;
+			display: block;
+			margin-top: 1rem;
+			font-size: 0.9rem;
+		}
+
+		.logo-img {
+			height: 144px;
+			width: auto;
+			margin-right: 1px;
+			vertical-align: -180%;
+			display: inline-block;
+		}
+
+		.info-down {
+			position: absolute;
+			bottom: 20px;
+			right: 20px;
+			font-size: 0.9rem;
+			opacity: 0.6;
+			font-family: 'Disket Mono', 'JetBrains Mono', monospace;
+		}
+	</style>
 </head>
 <body>
 	<canvas id="grid" width="2246" height="1216"></canvas>
     <div class="gradient"></div>
 	<div class="centertext">
-		<span class="text_1">Z</span>
+		<img src="https://raw.githubusercontent.com/renchdedsex/renchdedsex.github.io-/f34e4fc38d8029a039c1f73873b4cbfdb777a85d/logo_loco_el.png" alt="Logo" class="logo-img">
 		<span class="text_1" style="color:white;">City</span>
         <div style="margin-top: -2vh;">
-            <span class="info" id="info" style="font-weight: 500;">There is nothing for you... sorry :3</span>
+            <span class="info" id="info" style="font-weight: 500;">by Just A Bogler & renchdedsex</span>
             <br>
             <span class="info" id="map"></span>
             <br>
-            <span id="text_tips" tip="" style="opacity: 1;">Если человек ведет себя подозрительно, это не совсем причина для убийства</span>
+            <span id="text_tips" tip="" style="opacity: 1;">TIPS: LOADING...</span>
         </div>
 	</div>
-    <span class="info-down">zcity-help.ru</span>
+    <span class="info-down">zcity-help.ru // COMMUNITY HUB // discord.gg/acJRc8JgVQ</span>
 
     <script>
         const canvas = document.getElementById('grid');
@@ -70,24 +151,43 @@
     </script>
 
     <script>
+        const tips = {
+            ru: [
+                "Если человек ведет себя подозрительно, это не совсем причина для убийства",
+                "ZCITY PLAYER старался быть добрым...",
+                "Напиши !skip если хочешь доказать что ты нуб",
+                "Изначальная идея нашего сервера, быть заменой оригинальному Z-CITY",
+                "В меню ты можешь полностью настроить loadout трейтора",
+                "А ВЫ ПОМНИТЕ HOMIFORK+?",
+                "OT-CITY ддосят сервера, но даже так, их игроки идут играть к нам",
+                "Тут если что есть правила, и да, они были и на оригенале",
+                "Just A Bogler сделал самую большую часть сервера"
+            ],
+            en: [
+                "If someone acts suspiciously, that's not quite a reason to kill",
+                "ZCITY PLAYER tried to be kind...",
+                "Write !skip if you want to prove that you're a noob.",
+                "The original idea of ​​our server was to be a replacement for the original Z-CITY",
+                "DO YOU REMEMBER HOMIFORK+?",
+                "OT-CITY is DDoSing the servers, but even so, their players come to play with us.",
+                "The city never sleeps, and neither do you",
+                "There are rules here, and yes, they were in the original too.",
+                "Just A Bogler made the largest portion of the server"
+            ]
+        };
+
         var currentLang = navigator.language;
+
         function SelectTip() {
             const newLang = (currentLang === 'ru-RU' || currentLang === 'ru') ? 'ru' : 'en';
+            const tipsList = tips[newLang];
+            const randomIndex = Math.floor(Math.random() * tipsList.length);
 
-            fetch(`tips/${newLang}.json`)
-                .then(response => response.json())
-                .then(translationData => {
-                    document.querySelectorAll('[tip]').forEach(element => {
-                        var keys = Object.keys(translationData)
-                        const key = keys[Math.floor(Math.random() * keys.length)]
-                        //console.log(key)
-                        if (translationData[key]) {
-                            element.textContent = translationData[key];
-                        }
-                    });   
-                })
-                .catch(error => console.error('Error loading language file:', error)); 
+            document.querySelectorAll('[tip]').forEach(element => {
+                element.textContent = tipsList[randomIndex];
+            });
         }
+
         const changingText = document.getElementById('text_tips');
         function changeText(){
             changingText.style.opacity = 0;
@@ -96,20 +196,15 @@
                 changingText.style.opacity = 1;
                 SelectTip()
                 startThink()
-                //changingText.classList.remove('fade-out');
-                //SelectTip()
             }
-            
         }
 
         function startThink(){
             setTimeout(() => {
                 changeText()
-                //startThink()
-            },12000)
+            }, 12000)
         }
-        setTimeout(() => {changeText()},500)
-
+        setTimeout(() => {changeText()}, 500)
 
         const infoText = document.getElementById('info');
         const mapText = document.getElementById('map');
